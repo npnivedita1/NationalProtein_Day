@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protein Requirement Calculator</title>
+    <script>
+        // Fix visitor count storage issue
+        let visitorCount = Number(localStorage.getItem("visitorCount")) || 0;
+        visitorCount++;
+        localStorage.setItem("visitorCount", visitorCount);
+
+        function calculateProtein() {
+            let ageGroup = document.getElementById("ageGroup").value;
+            let weight = parseFloat(document.getElementById("weight").value);
+            let activityLevel = document.getElementById("activityLevel").value;
+            let proteinRequirement = 0;
+
+            // Validate weight input
+            if (!weight || weight <= 0) {
+                alert("Please enter a valid weight greater than 0.");
+                return;
+            }
+
+            // Protein calculation based on age and activity level
+            if (ageGroup === "infant") {
+                proteinRequirement = 1.52 * weight; // Infants have the same requirement
+            } else if (ageGroup === "toddler") {
+                proteinRequirement = activityLevel === "high" ? 1.2 * weight : 1.05 * weight;
+            } else if (ageGroup === "preschool") {
+                proteinRequirement = activityLevel === "high" ? 1.1 * weight : 0.95 * weight;
+            } else if (ageGroup === "teenager") {
+                proteinRequirement = activityLevel === "high" ? 1.2 * weight : 0.85 * weight;
+            } else if (ageGroup === "adult") {
+                proteinRequirement = activityLevel === "high" ? 1.0 * weight : 0.8 * weight;
+            }
+
+            // Clear previous results
+            document.getElementById("result").innerHTML = "";
+
+            // Display updated result
+            document.getElementById("result").innerHTML = 
+                `<tr><td>${ageGroup}</td><td>${weight} kg</td><td>${activityLevel}</td><td>${proteinRequirement.toFixed(2)} g/day</td></tr>`;
+        }
+    </script>
+</head>
+<body>
+    <h2>Protein Requirement Calculator</h2>
+    <p>Total Visitors: <span id="visitorCountDisplay"></span></p>
+
+    <label for="ageGroup">Age Group:</label>
+    <select id="ageGroup">
+        <option value="infant">Infant (0-1 yr)</option>
+        <option value="toddler">Toddler (1-3 yrs)</option>
+        <option value="preschool">Preschool (3-5 yrs)</option>
+        <option value="teenager">Teenager (13-19 yrs)</option>
+        <option value="adult">Adult (20+ yrs)</option>
+    </select>
+
+    <label for="weight">Weight (kg):</label>
+    <input type="number" id="weight" min="1" required>
+
+    <label for="activityLevel">Activity Level:</label>
+    <select id="activityLevel">
+        <option value="low">Low</option>
+        <option value="high">High</option>
+    </select>
+
+    <button onclick="calculateProtein()">Calculate</button>
+
+    <h3>Results:</h3>
+    <table border="1">
+        <tr>
+            <th>Age Group</th>
+            <th>Weight</th>
+            <th>Activity Level</th>
+            <th>Protein Requirement</th>
+        </tr>
+        <tbody id="result"></tbody>
+    </table>
+
+    <p>This is just for fun! For more accuracy, please refer to the <a href="https://www.icmr.nic.in/" target="_blank">ICMR RDA source</a> and <a href="https://ods.od.nih.gov/HealthInformation/nutrientrecommendations.aspx" target="_blank">NIH source</a>.</p>
+
+    <script>
+        document.getElementById("visitorCountDisplay").textContent = visitorCount;
+    </script>
+</body>
+</html>
